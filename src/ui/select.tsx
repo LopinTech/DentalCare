@@ -3,11 +3,12 @@ import { cn } from "@/lib/utils";
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
-  options: { label: string; value: string }[];
+  options?: { label: string; value: string }[];
   placeholder?: string;
+  children?: React.ReactNode;
 }
 
-export function Select({ className, label, error, id, options, placeholder, ...props }: SelectProps) {
+export function Select({ className, label, error, id, options, placeholder, children, ...props }: SelectProps) {
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
@@ -25,11 +26,13 @@ export function Select({ className, label, error, id, options, placeholder, ...p
         {...props}
       >
         {placeholder && <option value="">{placeholder}</option>}
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
+        {options
+          ? options.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))
+          : children}
       </select>
       {error && <p className="text-xs text-destructive-foreground">{error}</p>}
     </div>
