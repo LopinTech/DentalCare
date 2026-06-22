@@ -1,14 +1,11 @@
 import { Navbar } from "@/public/navbar";
 import { Footer } from "@/public/footer";
-import LandingContent from "./(public)/page";
 
-export default function Home() {
+export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
-      <main>
-        <LandingContent />
-      </main>
+      <main>{children}</main>
       <Footer />
     </>
   );

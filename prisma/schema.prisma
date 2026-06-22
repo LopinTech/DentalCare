@@ -99,7 +99,7 @@ enum PatientGender {
 // ─── Auth & User Management ────────────────────────────────────────────────────
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            String    @id
   name          String
   email         String    @unique
   emailVerified Boolean   @default(false)
@@ -120,13 +120,13 @@ model User {
 }
 
 model Session {
-  id             Int      @id @default(autoincrement())
+  id             String   @id
   expiresAt      DateTime
   token          String   @unique
   ipAddress      String?
   userAgent      String?
-  impersonatedBy Int?
-  userId         Int
+  impersonatedBy String?
+  userId         String
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -135,10 +135,10 @@ model Session {
 }
 
 model Account {
-  id                    Int       @id @default(autoincrement())
+  id                    String    @id
   accountId             String
   providerId            String
-  userId                Int
+  userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
@@ -154,7 +154,7 @@ model Account {
 }
 
 model Verification {
-  id         Int      @id @default(autoincrement())
+  id         String   @id
   identifier String
   value      String
   expiresAt  DateTime
@@ -252,7 +252,7 @@ model SubService {
 
 model Doctor {
   id                  Int      @id @default(autoincrement())
-  userId              Int      @unique
+  userId              String   @unique
   user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   profileImage        String?
   specialization      String?
@@ -348,7 +348,7 @@ model Referrer {
 
 model Patient {
   id                       Int            @id @default(autoincrement())
-  userId                   Int            @unique
+  userId                   String         @unique
   user                     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   profileImage             String?
   dateOfBirth              DateTime?
@@ -418,7 +418,7 @@ model Appointment {
   documents       Json?
   price           Decimal?                 @db.Decimal(10, 2)
   paymentStatus   AppointmentPaymentStatus @default(pending)
-  createdBy       Int?
+  createdBy       String?
   createdByUser   User?                    @relation("AppointmentCreatedBy", fields: [createdBy], references: [id])
   createdAt       DateTime                 @default(now())
   updatedAt       DateTime                 @updatedAt
