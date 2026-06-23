@@ -1,41 +1,45 @@
 "use client";
 
-import { Menu, Bell, LogOut, User } from "lucide-react";
+import { Bell, LogOut, Stethoscope } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/ui/button";
 import { Avatar } from "@/ui/avatar";
 
 interface AdminHeaderProps {
-  onMenuClick: () => void;
   user?: { name: string; email: string; image?: string | null };
 }
 
-export function AdminHeader({ onMenuClick, user }: AdminHeaderProps) {
+export function AdminHeader({ user }: AdminHeaderProps) {
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border bg-white px-4 lg:px-6">
-      {/* Left: mobile menu toggle */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={onMenuClick}
-          className="lg:hidden text-muted-foreground hover:text-foreground"
-          aria-label="Open menu"
+    <header className="flex h-14 items-center justify-between border-b border-border bg-white px-4 lg:h-16 lg:px-6">
+      {/* Mobile: logo | Desktop: "Admin Panel" label */}
+      <div className="flex items-center gap-2">
+        <Link
+          href="/admin"
+          className="flex items-center gap-2 font-bold text-primary lg:hidden"
         >
-          <Menu className="size-5" />
-        </button>
-        <h1 className="hidden text-sm font-semibold text-foreground lg:block">
+          <Stethoscope className="size-5" />
+          <span className="text-base">DentalCare</span>
+        </Link>
+        <span className="hidden text-sm font-semibold text-foreground lg:block">
           Admin Panel
-        </h1>
+        </span>
       </div>
 
-      {/* Right */}
+      {/* Right actions */}
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" aria-label="Notifications">
+        <Button variant="ghost" size="icon" aria-label="Notifications" className="relative">
           <Bell className="size-4.5" />
+          {/* Notification dot */}
+          <span className="absolute right-2 top-2 size-1.5 rounded-full bg-destructive" />
         </Button>
 
         <div className="flex items-center gap-2.5 pl-2 border-l border-border">
           <Avatar name={user?.name} src={user?.image} size="sm" />
           <div className="hidden md:block">
-            <p className="text-sm font-medium text-foreground leading-tight">{user?.name ?? "Admin"}</p>
+            <p className="text-sm font-medium text-foreground leading-tight">
+              {user?.name ?? "Admin"}
+            </p>
             <p className="text-xs text-muted-foreground">{user?.email ?? ""}</p>
           </div>
           <Button variant="ghost" size="icon-sm" aria-label="Logout">

@@ -1,37 +1,29 @@
 "use client";
 
-import { useState } from "react";
 import { AdminSidebar } from "@/admin/sidebar";
 import { AdminHeader } from "@/admin/header";
+import { AdminBottomNav } from "@/admin/bottom-nav";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
     <div className="flex h-screen w-full overflow-hidden bg-secondary">
-      {/* Desktop sidebar */}
+      {/* Desktop sidebar — hidden on mobile */}
       <div className="hidden lg:flex">
         <AdminSidebar />
       </div>
 
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => setSidebarOpen(false)}
-          />
-          <div className="relative z-10 flex h-full">
-            <AdminSidebar onClose={() => setSidebarOpen(false)} />
-          </div>
-        </div>
-      )}
-
-      {/* Main content */}
+      {/* Main content column */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <AdminHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
+        <AdminHeader />
+
+        {/* Scrollable content — extra bottom padding on mobile for the tab bar */}
+        <main className="flex-1 overflow-y-auto p-4 pb-24 lg:p-6 lg:pb-6">
+          {children}
+        </main>
       </div>
+
+      {/* Mobile bottom tab bar */}
+      <AdminBottomNav />
     </div>
   );
 }

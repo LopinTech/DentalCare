@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Switch to Hind Siliguri when Bengali language is active */
+[data-lang="bn"] {
+  --font-sans: var(--font-bn);
+}
+
 @utility container {
   margin-inline: auto;
   padding-inline: 1rem;

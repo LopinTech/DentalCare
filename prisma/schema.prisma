@@ -82,6 +82,21 @@ enum TreatmentPlanItemStatus {
   skipped
 }
 
+enum DepartmentType {
+  dental
+  general
+}
+
+enum QueueStatus {
+  waiting
+  with_doctor
+  in_pathology
+  in_lab
+  completed
+  cancelled
+  no_show
+}
+
 enum PhotoType {
   before
   after
@@ -282,6 +297,8 @@ model Doctor {
   treatmentSessions TreatmentSession[]
   treatmentPlans    TreatmentPlan[]
   invoices          Invoice[]
+  deptDoctors       DeptDoctor[]
+  queueTokens       QueueToken[]
 }
 
 model DoctorService {
@@ -392,6 +409,7 @@ model Patient {
   treatmentPlans    TreatmentPlan[]
   consentForms      ConsentForm[]
   photos            PatientPhoto[]
+  queueTokens       QueueToken[]
 }
 
 // ─── Appointments ──────────────────────────────────────────────────────────────
@@ -670,4 +688,68 @@ model Category {
   updatedAt   DateTime @updatedAt
 
   @@index([type])
+}
+
+// ─── Department & Queue System ─────────────────────────────────────────────────
+
+model ClinicDepartment {
+  id          Int            @id @default(autoincrement())
+  name        String
+  nameBn      String?
+  type        DepartmentType
+  parentId    Int?
+  parent      ClinicDepartment?  @relation("DeptHierarchy", fields: [parentId], references: [id])
+  children    ClinicDepartment[] @relation("DeptHierarchy")
+  isActive    Boolean        @default(true)
+  sortOrder   Int            @default(0)
+  description String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  deptDoctors DeptDoctor[]
+  queueTokens QueueToken[]
+
+  @@index([type])
+  @@index([parentId])
+}
+
+model DeptDoctor {
+  id           Int              @id @default(autoincrement())
+  departmentId Int
+  department   ClinicDepartment @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  doctorId     Int
+  doctor       Doctor           @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  designation  String?
+  isActive     Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([departmentId, doctorId])
+  @@index([departmentId])
+  @@index([doctorId])
+}
+
+model QueueToken {
+  id             Int              @id @default(autoincrement())
+  tokenNumber    Int
+  patientId      Int
+  patient        Patient          @relation(fields: [patientId], references: [id])
+  departmentId   Int
+  department     ClinicDepartment @relation(fields: [departmentId], references: [id])
+  doctorId       Int?
+  doctor         Doctor?          @relation(fields: [doctorId], references: [id])
+  queueDate      DateTime         @db.Date
+  status         QueueStatus      @default(waiting)
+  chiefComplaint String?
+  notes          String?
+  calledAt       DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@unique([departmentId, tokenNumber, queueDate])
+  @@index([queueDate])
+  @@index([patientId])
+  @@index([departmentId])
+  @@index([status])
 }

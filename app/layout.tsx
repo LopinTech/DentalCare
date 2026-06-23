@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Hind_Siliguri, Space_Grotesk } from "next/font/google";
 import { Toaster } from "sonner";
+import { LanguageProvider } from "@/lib/language-context";
 import "./globals.css";
 
-const inter = Inter({
+const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
   subsets: ["latin"],
+});
+
+const hindSiliguri = Hind_Siliguri({
+  variable: "--font-bn",
+  subsets: ["latin", "bengali"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -19,10 +26,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${hindSiliguri.variable}`}>
       <body className="min-h-screen antialiased">
-        {children}
-        <Toaster richColors position="top-right" />
+        <LanguageProvider>
+          {children}
+          <Toaster richColors position="top-right" />
+        </LanguageProvider>
       </body>
     </html>
   );
