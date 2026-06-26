@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  ArrowLeft,
   Calendar,
   Plus,
   Eye,
@@ -29,15 +28,6 @@ interface Appointment {
 }
 
 // ─── Placeholder data (replace with DB queries using patientId) ───────────────
-
-const PATIENT_NAME = "John Doe";
-
-const TABS = [
-  { label: "Overview",     href: ""              },
-  { label: "Appointments", href: "/appointments" },
-  { label: "Treatment",    href: "/treatment"    },
-  { label: "Invoices",     href: "/invoices"     },
-];
 
 const APPOINTMENTS: Appointment[] = [
   {
@@ -153,58 +143,14 @@ export default async function PatientAppointmentsPage({
   return (
     <div className="flex flex-col gap-6">
 
-      {/* ── Back button ─────────────────────────────────────────────────────── */}
-      <div>
-        <Link href={`/admin/patients/${patientId}`}>
-          <Button variant="ghost" size="sm" className="text-muted-foreground -ml-1.5">
-            <ArrowLeft />
-            Back to Patient
+      {/* ── Actions row ─────────────────────────────────────────────────────── */}
+      <div className="flex justify-end">
+        <Link href="/admin/appointments/new">
+          <Button variant="default" size="sm">
+            <Plus />
+            Book New Appointment
           </Button>
         </Link>
-      </div>
-
-      {/* ── Patient header ──────────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#16a34a]">
-            Patient #{patientId}
-          </p>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Appointments — {PATIENT_NAME}
-          </h1>
-        </div>
-        <div className="sm:shrink-0">
-          <Link href="/admin/appointments/new">
-            <Button variant="default">
-              <Plus />
-              Book New Appointment
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* ── Tabs row ────────────────────────────────────────────────────────── */}
-      <div className="border-b border-border">
-        <nav className="-mb-px flex gap-0" aria-label="Patient sections">
-          {TABS.map((tab) => {
-            const isActive = tab.label === "Appointments";
-            return (
-              <Link
-                key={tab.label}
-                href={`/admin/patients/${patientId}${tab.href}`}
-                className={[
-                  "inline-block border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
-                  isActive
-                    ? "border-[#16a34a] text-[#16a34a]"
-                    : "border-transparent text-muted-foreground hover:text-foreground hover:border-border",
-                ].join(" ")}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {tab.label}
-              </Link>
-            );
-          })}
-        </nav>
       </div>
 
       {/* ── Filter row ──────────────────────────────────────────────────────── */}
@@ -343,7 +289,7 @@ export default async function PatientAppointmentsPage({
                       {/* 3-px left-edge status stripe — mirrors appointments list pattern */}
                       <td className="w-0 p-0">
                         <div
-                          className="h-full w-[3px] min-h-[52px]"
+                          className="h-full w-0.75 min-h-13"
                           style={{ background: accent }}
                           aria-hidden="true"
                         />
