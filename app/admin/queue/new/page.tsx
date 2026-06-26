@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
+import { Textarea } from "@/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Badge } from "@/ui/badge";
 import { cn } from "@/lib/utils";
@@ -737,14 +738,14 @@ export default function NewQueuePage() {
                       (required)
                     </span>
                   </label>
-                  <textarea
+                  <Textarea
                     id="chief-complaint"
                     required
                     rows={3}
                     placeholder="Main symptom or reason for visit — e.g. tooth pain, difficulty hearing..."
                     value={chiefComplaint}
                     onChange={(e) => setChiefComplaint(e.target.value)}
-                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-y min-h-[80px]"
+                    className="resize-y min-h-20"
                   />
                 </div>
 
@@ -758,13 +759,13 @@ export default function NewQueuePage() {
                       (optional)
                     </span>
                   </label>
-                  <textarea
+                  <Textarea
                     id="visit-notes"
                     rows={2}
                     placeholder="Any additional context — referral, previous visit, urgency..."
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-y min-h-[64px]"
+                    className="resize-y min-h-16"
                   />
                 </div>
               </CardContent>

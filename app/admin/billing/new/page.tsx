@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Plus, Trash2, FileText } from "lucide-react";
 import { Input } from "@/ui/input";
 import { Select } from "@/ui/select";
+import { Textarea } from "@/ui/textarea";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 
@@ -340,13 +341,13 @@ export default function NewInvoicePage() {
                   <label htmlFor="notes" className="text-sm font-medium text-foreground">
                     Notes
                   </label>
-                  <textarea
+                  <Textarea
                     id="notes"
                     placeholder="Payment terms, special instructions, or anything the patient should know..."
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     rows={4}
-                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-y"
+                    className="resize-y"
                   />
                 </div>
               </CardContent>

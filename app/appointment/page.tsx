@@ -4,6 +4,7 @@ import { Footer } from "@/public/footer";
 import { Navbar } from "@/public/navbar";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
+import { Textarea } from "@/ui/textarea";
 import {
 	Activity,
 	Calendar,
@@ -475,13 +476,12 @@ function StepPatientInfo({
 						Symptoms or concerns{" "}
 						<span className="text-[#9ca3af] font-normal">(optional)</span>
 					</label>
-					<textarea
+					<Textarea
 						id="patient-symptoms"
 						rows={4}
 						placeholder="Describe what you are experiencing — sensitivity, pain, a chipped tooth, or anything else you want your doctor to know."
 						value={info.symptoms}
 						onChange={(e) => onChange("symptoms", e.target.value)}
-						className="flex w-full rounded-md border border-[#e5e7eb] bg-white px-3 py-2.5 text-sm text-[#111827] shadow-sm transition-colors placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#16a34a]/50 focus:border-[#16a34a] resize-none"
 					/>
 				</div>
 			</div>

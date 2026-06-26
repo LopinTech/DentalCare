@@ -4,14 +4,13 @@ import { cn } from "@/lib/utils";
 import { useVoiceInput } from "@/lib/use-voice-input";
 import { Mic, MicOff } from "lucide-react";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: string;
 }
 
-export function Input({ className, label, error, id, type, onChange, ...props }: InputProps) {
+export function Textarea({ className, label, error, id, onChange, ...props }: TextareaProps) {
   const { listening, supported, start, stop } = useVoiceInput();
-  const showMic = supported && type !== "password";
 
   function handleMic() {
     if (listening) {
@@ -21,7 +20,7 @@ export function Input({ className, label, error, id, type, onChange, ...props }:
     start((transcript) => {
       const current = String(props.value ?? "");
       const next = current ? `${current} ${transcript}` : transcript;
-      onChange?.({ target: { value: next } } as React.ChangeEvent<HTMLInputElement>);
+      onChange?.({ target: { value: next } } as React.ChangeEvent<HTMLTextAreaElement>);
     });
   }
 
@@ -33,25 +32,23 @@ export function Input({ className, label, error, id, type, onChange, ...props }:
         </label>
       )}
       <div className="relative">
-        <input
+        <textarea
           id={id}
-          type={type}
           className={cn(
-            "flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-            showMic && "pr-9",
+            "flex w-full rounded-md border border-input bg-background px-3 py-2 pr-9 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none",
             error && "border-destructive-foreground focus-visible:ring-destructive/30",
             className
           )}
           onChange={onChange}
           {...props}
         />
-        {showMic && (
+        {supported && (
           <button
             type="button"
             onClick={handleMic}
             aria-label={listening ? "Stop voice input" : "Start voice input"}
             className={cn(
-              "absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 transition-colors",
+              "absolute right-2 top-2 rounded p-0.5 transition-colors",
               listening
                 ? "text-red-500 animate-pulse"
                 : "text-muted-foreground hover:text-foreground"

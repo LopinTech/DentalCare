@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Save } from "lucide-react";
 import { Input } from "@/ui/input";
 import { Select } from "@/ui/select";
+import { Textarea } from "@/ui/textarea";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 
@@ -184,13 +185,13 @@ export default function EditAppointmentPage({
               >
                 Notes
               </label>
-              <textarea
+              <Textarea
                 id="notes"
                 rows={3}
-                className="w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 placeholder="Add any scheduling or administrative notes…"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
+                className="resize-y"
               />
             </div>
 
@@ -208,13 +209,13 @@ export default function EditAppointmentPage({
                 >
                   Symptoms
                 </label>
-                <textarea
+                <Textarea
                   id="symptoms"
                   rows={3}
-                  className="w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   placeholder="Describe the patient's reported symptoms…"
                   value={symptoms}
                   onChange={(e) => setSymptoms(e.target.value)}
+                  className="resize-y"
                 />
               </div>
 
@@ -226,13 +227,13 @@ export default function EditAppointmentPage({
                 >
                   Diagnosis
                 </label>
-                <textarea
+                <Textarea
                   id="diagnosis"
                   rows={3}
-                  className="w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   placeholder="Clinical diagnosis and findings…"
                   value={diagnosis}
                   onChange={(e) => setDiagnosis(e.target.value)}
+                  className="resize-y"
                 />
               </div>
             </div>

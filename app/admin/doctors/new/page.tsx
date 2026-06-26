@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Select } from "@/ui/select";
+import { Textarea } from "@/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Separator } from "@/ui/separator";
 
@@ -184,13 +185,12 @@ export default function NewDoctorPage() {
               <label htmlFor="biography" className="text-sm font-medium">
                 Biography
               </label>
-              <textarea
+              <Textarea
                 id="biography"
                 rows={5}
                 placeholder="Write a short biography for this doctor..."
                 value={biography}
                 onChange={(e) => setBiography(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
               />
             </div>
           </CardContent>

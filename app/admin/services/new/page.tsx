@@ -6,6 +6,7 @@ import { ArrowLeft, Stethoscope, Scissors } from "lucide-react";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Select } from "@/ui/select";
+import { Textarea } from "@/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -148,13 +149,12 @@ export default function NewServicePage() {
               <label htmlFor="description" className="text-sm font-medium text-foreground">
                 Description
               </label>
-              <textarea
+              <Textarea
                 id="description"
                 placeholder="Brief description of this service (optional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none transition-colors"
               />
             </div>
           </CardContent>

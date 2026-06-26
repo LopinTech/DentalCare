@@ -6,41 +6,48 @@ import { PrismaClient } from "../generated/prisma/client";
 const adapter = new PrismaPg(process.env.DATABASE_URL!);
 const prisma = new PrismaClient({ adapter });
 
-async function main() {
-  const existing = await prisma.user.findUnique({
-    where: { email: "admin@dentalcare.com" },
-  });
+type SeedUser = {
+  name: string;
+  email: string;
+  password: string;
+  role: "admin" | "doctor" | "patient";
+};
 
+const SEED_USERS: SeedUser[] = [
+  { name: "Admin", email: "admin@mail.com", password: "password", role: "admin" },
+  { name: "Doctor", email: "doctor@mail.com", password: "password", role: "doctor" },
+  { name: "Patient", email: "patient@mail.com", password: "password", role: "patient" },
+];
+
+async function seedUser(user: SeedUser) {
+  const existing = await prisma.user.findUnique({ where: { email: user.email } });
   if (existing) {
-    console.log("Admin user already exists:", existing.email);
-    await prisma.$disconnect();
+    console.log(`  ⏭  Already exists: ${user.email}`);
     return;
   }
 
-  // Use better-auth's own sign-up API to create the user with proper password hashing
   const result = await auth.api.signUpEmail({
-    body: {
-      name: "Super Admin",
-      email: "admin@dentalcare.com",
-      password: "Admin@1234",
-    },
+    body: { name: user.name, email: user.email, password: user.password },
   });
 
   if (!result?.user) {
-    console.error("Failed to create admin user:", result);
-    process.exit(1);
+    console.error(`  ✗  Failed to create: ${user.email}`);
+    return;
   }
 
-  // Promote to admin role
   await prisma.user.update({
-    where: { email: "admin@dentalcare.com" },
-    data: { role: "admin", emailVerified: true },
+    where: { email: user.email },
+    data: { role: user.role, emailVerified: true },
   });
 
-  console.log("✅ Admin user created successfully");
-  console.log("   Email:    admin@dentalcare.com");
-  console.log("   Password: Admin@1234");
+  console.log(`  ✅ Created [${user.role}]: ${user.email} / ${user.password}`);
+}
 
+async function main() {
+  console.log("Seeding users...");
+  for (const user of SEED_USERS) {
+    await seedUser(user);
+  }
   await prisma.$disconnect();
 }
 

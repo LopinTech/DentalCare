@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { Input } from "@/ui/input";
 import { Select } from "@/ui/select";
+import { Textarea } from "@/ui/textarea";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 
@@ -196,12 +197,12 @@ export default function NewAppointmentPage() {
               <label className="text-sm font-medium" htmlFor="notes">
                 Notes
               </label>
-              <textarea
+              <Textarea
                 id="notes"
-                className="w-full min-h-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-y"
                 placeholder="Additional notes..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
+                className="min-h-25 resize-y"
               />
             </div>
 

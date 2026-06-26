@@ -6,6 +6,7 @@ import { ArrowLeft, Trash2 } from "lucide-react";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Select } from "@/ui/select";
+import { Textarea } from "@/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Separator } from "@/ui/separator";
 
@@ -224,13 +225,12 @@ export default function EditServicePage({
               <label htmlFor="description" className="text-sm font-medium">
                 Description
               </label>
-              <textarea
+              <Textarea
                 id="description"
                 rows={4}
                 placeholder="Describe the service or procedure..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
               />
             </div>
           </CardContent>
