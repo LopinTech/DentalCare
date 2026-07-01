@@ -11,6 +11,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Badge } from "@/ui/badge";
 import { Button } from "@/ui/button";
+import { PatientTabsNav } from "@/components/patient-tabs-nav";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -142,6 +143,11 @@ export default async function PatientAppointmentsPage({
 
   return (
     <div className="flex flex-col gap-6">
+
+      {/* ── Tab navigation ───────────────────────────────────────────────────── */}
+      <div className="bg-background rounded-2xl border border-border overflow-hidden">
+        <PatientTabsNav patientId={patientId} />
+      </div>
 
       {/* ── Actions row ─────────────────────────────────────────────────────── */}
       <div className="flex justify-end">

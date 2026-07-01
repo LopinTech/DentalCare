@@ -1,6 +1,7 @@
 import { Stethoscope } from "lucide-react";
 import { Button } from "@/ui/button";
 import Link from "next/link";
+import { PatientTabsNav } from "@/components/patient-tabs-nav";
 
 export default async function PatientTreatmentPage({
   params,
@@ -11,6 +12,11 @@ export default async function PatientTreatmentPage({
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Tab navigation */}
+      <div className="bg-background rounded-2xl border border-border overflow-hidden">
+        <PatientTabsNav patientId={patientId} />
+      </div>
+
       {/* Header row */}
       <div className="flex items-center justify-between">
         <div>

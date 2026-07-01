@@ -1,15 +1,21 @@
 import { Receipt } from "lucide-react";
 import { Button } from "@/ui/button";
+import { PatientTabsNav } from "@/components/patient-tabs-nav";
 
 export default async function PatientInvoicesPage({
   params,
 }: {
   params: Promise<{ patientId: string }>;
 }) {
-  await params;
+  const { patientId } = await params;
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Tab navigation */}
+      <div className="bg-background rounded-2xl border border-border overflow-hidden">
+        <PatientTabsNav patientId={patientId} />
+      </div>
+
       {/* Header row */}
       <div className="flex items-center justify-between">
         <div>
