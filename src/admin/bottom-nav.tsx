@@ -1,34 +1,33 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { signOut } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import {
+	BarChart3,
+	Building2,
+	Calendar,
+	CreditCard,
+	FileQuestion,
+	FileSignature,
+	FlaskConical,
+	GitFork,
+	Grid2X2,
 	LayoutDashboard,
 	ListOrdered,
-	Users,
-	Calendar,
-	Grid2X2,
-	Stethoscope,
-	Settings,
-	CreditCard,
-	UserCog,
-	Package,
-	BarChart3,
-	FileQuestion,
-	Tag,
-	FileSignature,
-	GitFork,
-	Building2,
-	User,
-	X,
-	Truck,
-	FlaskConical,
 	LogOut,
+	Package,
+	Settings,
+	Stethoscope,
+	Tag,
+	Truck,
+	User,
+	UserCog,
+	Users,
+	X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { signOut } from "@/lib/auth-client";
 
 const BOTTOM_TABS = [
 	{ label: "Home", href: "/admin", icon: LayoutDashboard },
@@ -191,7 +190,7 @@ export function AdminBottomNav() {
 						<div className="px-4 pb-6">
 							<button
 								onClick={handleLogout}
-								className="flex w-full items-center justify-center gap-2 rounded-2xl bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive transition-all active:scale-95 hover:bg-destructive/20"
+								className="flex w-full items-center justify-center gap-2 rounded-2xl bg-red-400 px-4 py-3 text-sm font-semibold text-white transition-all active:scale-95 hover:bg-destructive/20"
 							>
 								<LogOut className="size-4" />
 								Logout
