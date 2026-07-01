@@ -1,9 +1,10 @@
 "use client";
 
-import { Bell, LogOut, Stethoscope } from "lucide-react";
+import { Bell, Stethoscope } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/ui/button";
 import { Avatar } from "@/ui/avatar";
+import { LogoutButton } from "@/components/logout-button";
 
 interface AdminHeaderProps {
   user?: { name: string; email: string; image?: string | null };
@@ -42,9 +43,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             </p>
             <p className="text-xs text-muted-foreground">{user?.email ?? ""}</p>
           </div>
-          <Button variant="ghost" size="icon-sm" aria-label="Logout">
-            <LogOut className="size-4" />
-          </Button>
+          <LogoutButton />
         </div>
       </div>
     </header>

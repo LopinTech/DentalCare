@@ -18,8 +18,10 @@ import {
 	MapPin,
 	Phone,
 	Pill,
+	Plus,
 	ShieldAlert,
 	Stethoscope,
+	Trash2,
 	User,
 	Users,
 	Venus,
@@ -28,6 +30,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
+
+interface FamilyMemberEntry {
+	name: string;
+	relation: string;
+	phone: string;
+}
 
 interface BasicInfo {
 	fullName: string;
@@ -46,6 +54,11 @@ interface BasicInfo {
 	guardianName: string;
 	guardianRelation: string;
 	guardianPhone: string;
+	agreementAccepted: boolean;
+	agreementPartner: string;
+	referralSource: string;
+	referralDetails: string;
+	familyMembers: FamilyMemberEntry[];
 }
 
 interface ConditionEntry {
@@ -344,6 +357,11 @@ export default function NewPatientPage() {
 		guardianName: "",
 		guardianRelation: "",
 		guardianPhone: "",
+		agreementAccepted: false,
+		agreementPartner: "",
+		referralSource: "",
+		referralDetails: "",
+		familyMembers: [],
 	});
 
 	const [medical, setMedical] = useState<MedicalInfo>({
@@ -544,6 +562,56 @@ export default function NewPatientPage() {
 					</section>
 
 					<section>
+						<h2 className="text-base font-semibold mb-3">Agreement & Referral</h2>
+						<div className="space-y-4">
+							<div
+								className="flex items-center justify-between rounded-lg border border-border px-3 py-2.5 cursor-pointer hover:bg-muted/40 transition-colors select-none"
+								onClick={() => setB("agreementAccepted", !basic.agreementAccepted)}
+							>
+								<span className="text-sm font-medium">Patient Agreement Accepted</span>
+								<Switch
+									checked={basic.agreementAccepted}
+									onChange={(val) => setB("agreementAccepted", val)}
+								/>
+							</div>
+							{basic.agreementAccepted && (
+								<Input
+									label="Agreement Partner / Clinic"
+									id="agreementPartner"
+									placeholder="Partner or clinic name"
+									value={basic.agreementPartner}
+									onChange={(e) => setB("agreementPartner", e.target.value)}
+								/>
+							)}
+							<Select
+								label="Referred By"
+								id="referralSource"
+								value={basic.referralSource}
+								onChange={(e) => setB("referralSource", e.target.value)}
+								options={[
+									{ label: "Self", value: "Self" },
+									{ label: "Doctor Referral", value: "Doctor Referral" },
+									{ label: "Online / Social Media", value: "Online / Social Media" },
+									{ label: "Walk-In", value: "Walk-In" },
+									{ label: "Family Member", value: "Family Member" },
+									{ label: "Health Camp", value: "Health Camp" },
+									{ label: "Other", value: "Other" },
+								]}
+								placeholder="Select referral source"
+							/>
+							{basic.referralSource && basic.referralSource !== "Self" && (
+								<Input
+									label="Referral Details"
+									id="referralDetails"
+									placeholder="Additional referral details"
+									value={basic.referralDetails}
+									onChange={(e) => setB("referralDetails", e.target.value)}
+								/>
+							)}
+						</div>
+					</section>
+
+					<section>
 						<div
 							className="flex items-center justify-between mb-3 cursor-pointer select-none"
 							onClick={() => setB("isChildPatient", !basic.isChildPatient)}
@@ -580,6 +648,85 @@ export default function NewPatientPage() {
 								/>
 							</div>
 						)}
+					</section>
+
+					<section>
+						<div className="flex items-center justify-between mb-3">
+							<h2 className="text-base font-semibold">Family Members</h2>
+							<Button
+								type="button"
+								size="sm"
+								variant="outline"
+								onClick={() =>
+									setB("familyMembers", [
+										...basic.familyMembers,
+										{ name: "", relation: "", phone: "" },
+									])
+								}
+							>
+								<Plus className="size-3.5" />
+								Add Family Member
+							</Button>
+						</div>
+						{basic.familyMembers.length === 0 && (
+							<p className="text-sm text-muted-foreground">No family members added.</p>
+						)}
+						<div className="space-y-2">
+							{basic.familyMembers.map((member, idx) => (
+								<div
+									key={idx}
+									className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_1fr_auto] items-end rounded-lg border border-border p-3"
+								>
+									<Input
+										placeholder="Full name"
+										value={member.name}
+										onChange={(e) => {
+											const updated = [...basic.familyMembers];
+											updated[idx] = { ...updated[idx], name: e.target.value };
+											setB("familyMembers", updated);
+										}}
+									/>
+									<Select
+										value={member.relation}
+										onChange={(e) => {
+											const updated = [...basic.familyMembers];
+											updated[idx] = { ...updated[idx], relation: e.target.value };
+											setB("familyMembers", updated);
+										}}
+										options={[
+											{ label: "Parent", value: "Parent" },
+											{ label: "Spouse", value: "Spouse" },
+											{ label: "Child", value: "Child" },
+											{ label: "Sibling", value: "Sibling" },
+											{ label: "Other", value: "Other" },
+										]}
+										placeholder="Relation"
+									/>
+									<Input
+										type="tel"
+										placeholder="Phone"
+										value={member.phone}
+										onChange={(e) => {
+											const updated = [...basic.familyMembers];
+											updated[idx] = { ...updated[idx], phone: e.target.value };
+											setB("familyMembers", updated);
+										}}
+									/>
+									<Button
+										type="button"
+										size="icon-sm"
+										variant="ghost"
+										className="text-destructive hover:text-destructive hover:bg-destructive/10"
+										onClick={() => {
+											const updated = basic.familyMembers.filter((_, i) => i !== idx);
+											setB("familyMembers", updated);
+										}}
+									>
+										<Trash2 className="size-4" />
+									</Button>
+								</div>
+							))}
+						</div>
 					</section>
 				</div>
 			)}
@@ -909,6 +1056,47 @@ export default function NewPatientPage() {
 								<ReviewItem label="Name" value={basic.emergencyName} />
 								<ReviewItem label="Relation" value={basic.emergencyRelation} />
 								<ReviewItem label="Phone" value={basic.emergencyPhone} />
+							</div>
+						</ReviewCard>
+					)}
+
+					{/* Agreement & Referral */}
+					{(basic.agreementAccepted || basic.referralSource) && (
+						<ReviewCard title="Agreement & Referral" icon={<ClipboardList />} accent="info">
+							<div className="grid grid-cols-2 gap-x-6 gap-y-3">
+								<ReviewItem
+									label="Agreement Accepted"
+									value={basic.agreementAccepted ? "Yes" : undefined}
+								/>
+								{basic.agreementAccepted && (
+									<ReviewItem label="Agreement Partner" value={basic.agreementPartner} />
+								)}
+								<ReviewItem label="Referred By" value={basic.referralSource} />
+								{basic.referralSource && basic.referralSource !== "Self" && (
+									<ReviewItem label="Referral Details" value={basic.referralDetails} />
+								)}
+							</div>
+						</ReviewCard>
+					)}
+
+					{/* Family Members */}
+					{basic.familyMembers.length > 0 && (
+						<ReviewCard title="Family Members" icon={<Users />}>
+							<div className="space-y-2">
+								{basic.familyMembers.map((member, idx) => (
+									<div
+										key={idx}
+										className="flex items-center gap-4 pb-2 border-b border-border/40 last:border-0 last:pb-0"
+									>
+										<span className="text-sm font-medium text-foreground min-w-0 flex-1">
+											{member.name || <span className="italic text-muted-foreground">—</span>}
+										</span>
+										<span className="text-xs text-muted-foreground">{member.relation}</span>
+										{member.phone && (
+											<span className="text-xs text-muted-foreground">{member.phone}</span>
+										)}
+									</div>
+								))}
 							</div>
 						</ReviewCard>
 					)}

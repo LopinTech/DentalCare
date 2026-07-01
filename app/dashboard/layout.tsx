@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Calendar, User, Stethoscope as Logo, LogOut,
+  LayoutDashboard, Calendar, User, Stethoscope as Logo,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LogoutButton } from "@/components/logout-button";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -42,10 +43,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             );
           })}
         </nav>
-        <button className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-          <LogOut className="size-4" />
-          <span className="hidden md:inline">Logout</span>
-        </button>
+        <LogoutButton />
       </header>
 
       {/* Main content */}

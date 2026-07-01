@@ -10,13 +10,18 @@ type SeedUser = {
   name: string;
   email: string;
   password: string;
-  role: "admin" | "doctor" | "patient";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  role: any;
 };
 
 const SEED_USERS: SeedUser[] = [
   { name: "Admin", email: "admin@mail.com", password: "password", role: "admin" },
   { name: "Doctor", email: "doctor@mail.com", password: "password", role: "doctor" },
   { name: "Patient", email: "patient@mail.com", password: "password", role: "patient" },
+  { name: "Receptionist", email: "receptionist@mail.com", password: "password", role: "receptionist" },
+  { name: "Employee", email: "employee@mail.com", password: "password", role: "employee" },
+  { name: "Lab Staff", email: "lab@mail.com", password: "password", role: "lab" },
+  { name: "Supplier", email: "supplier@mail.com", password: "password", role: "supplier" },
 ];
 
 async function seedUser(user: SeedUser) {
@@ -153,6 +158,34 @@ async function seedServices() {
   }
 }
 
+const SUPPLIER_CATEGORIES = [
+  { name: "Dental Instruments", description: "Mirrors, probes, forceps, elevators and hand instruments", sortOrder: 1 },
+  { name: "Dental Materials", description: "Composites, cements, bonding agents, impression materials", sortOrder: 2 },
+  { name: "Anesthetics & Medications", description: "Local anesthetics, analgesics, antibiotics", sortOrder: 3 },
+  { name: "Orthodontic Supplies", description: "Brackets, wires, bands, aligners", sortOrder: 4 },
+  { name: "Sterilization & Infection Control", description: "Autoclaves, disinfectants, gloves, masks, PPE", sortOrder: 5 },
+  { name: "X-Ray & Imaging", description: "Film, digital sensors, phosphor plates, contrast media", sortOrder: 6 },
+  { name: "Lab Supplies", description: "Plaster, acrylics, wax, dies, articulating paper", sortOrder: 7 },
+  { name: "Disposables & Consumables", description: "Needles, cups, bibs, cotton rolls, gauze", sortOrder: 8 },
+  { name: "Equipment & Machinery", description: "Dental chairs, compressors, handpieces, ultrasonic scalers", sortOrder: 9 },
+  { name: "Office & Administrative Supplies", description: "Stationery, forms, appointment cards, software", sortOrder: 10 },
+];
+
+async function seedSupplierCategories() {
+  console.log("Seeding supplier categories...");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
+  for (const cat of SUPPLIER_CATEGORIES) {
+    const existing = await db.supplierCategory.findFirst({ where: { name: cat.name } });
+    if (existing) {
+      console.log(`  ⏭  Already exists: ${cat.name}`);
+      continue;
+    }
+    await db.supplierCategory.create({ data: { ...cat, isActive: true } });
+    console.log(`  ✅ Category: ${cat.name}`);
+  }
+}
+
 async function main() {
   console.log("Seeding users...");
   for (const user of SEED_USERS) {
@@ -160,6 +193,7 @@ async function main() {
   }
 
   await seedServices();
+  await seedSupplierCategories();
 
   await prisma.$disconnect();
 }

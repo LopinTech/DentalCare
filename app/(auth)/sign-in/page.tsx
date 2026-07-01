@@ -4,13 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Stethoscope, User, ShieldCheck } from "lucide-react";
+import { Stethoscope, User, ShieldCheck, Headphones, Briefcase, FlaskConical, Truck } from "lucide-react";
 import { Input } from "@/ui/input";
 import { Button } from "@/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
-type RoleOption = "doctor" | "patient" | "admin";
+type RoleOption = "doctor" | "patient" | "admin" | "receptionist" | "employee" | "lab" | "supplier";
 
 const ROLES: {
   value: RoleOption;
@@ -40,11 +40,43 @@ const ROLES: {
     email: "admin@mail.com",
     hint: "admin@mail.com / password",
   },
+  {
+    value: "receptionist",
+    label: "Receptionist",
+    icon: <Headphones className="size-5" />,
+    email: "receptionist@mail.com",
+    hint: "receptionist@mail.com / password",
+  },
+  {
+    value: "employee",
+    label: "Employee",
+    icon: <Briefcase className="size-5" />,
+    email: "employee@mail.com",
+    hint: "employee@mail.com / password",
+  },
+  {
+    value: "lab",
+    label: "Lab Staff",
+    icon: <FlaskConical className="size-5" />,
+    email: "lab@mail.com",
+    hint: "lab@mail.com / password",
+  },
+  {
+    value: "supplier",
+    label: "Supplier",
+    icon: <Truck className="size-5" />,
+    email: "supplier@mail.com",
+    hint: "supplier@mail.com / password",
+  },
 ];
 
 function getRedirectPath(role: string): string {
   if (role === "doctor") return "/dashboard";
   if (role === "patient") return "/appointment";
+  if (role === "receptionist") return "/receptionist";
+  if (role === "employee") return "/employee";
+  if (role === "lab") return "/lab";
+  if (role === "supplier") return "/supplier";
   return "/admin";
 }
 
@@ -62,11 +94,22 @@ export default function SignInPage() {
       const result = await authClient.signIn.email({ email, password });
       if (result.error) {
         toast.error(result.error.message ?? "Invalid credentials");
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const role = (result.data?.user as any)?.role ?? selectedRole;
-        router.push(getRedirectPath(role));
+        return;
       }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const actualRole = (result.data?.user as any)?.role as string;
+
+      if (actualRole !== selectedRole) {
+        // Role mismatch — sign them back out and reject
+        await authClient.signOut();
+        toast.error(
+          `This account is not a ${ROLES.find((r) => r.value === selectedRole)?.label ?? selectedRole}. Please select the correct role.`
+        );
+        return;
+      }
+
+      router.push(getRedirectPath(actualRole));
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -77,7 +120,7 @@ export default function SignInPage() {
   const activeRole = ROLES.find((r) => r.value === selectedRole)!;
 
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full max-w-md">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
         <p className="mt-1 text-sm text-muted-foreground">Sign in to your DentalCare account</p>
@@ -85,7 +128,7 @@ export default function SignInPage() {
 
       <div className="mb-6">
         <p className="text-sm font-medium text-foreground mb-2.5">Sign in as</p>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {ROLES.map((role) => (
             <button
               key={role.value}
@@ -99,7 +142,7 @@ export default function SignInPage() {
               )}
             >
               {role.icon}
-              <span className="font-medium">{role.label}</span>
+              <span className="font-medium text-center text-[11px] leading-tight">{role.label}</span>
             </button>
           ))}
         </div>

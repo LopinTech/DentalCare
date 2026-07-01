@@ -6,10 +6,12 @@ import {
   LayoutDashboard, ListOrdered, Users, Calendar, Grid2X2,
   Stethoscope, Settings, CreditCard, UserCog, Package,
   BarChart3, FileQuestion, Tag, FileSignature, GitFork,
-  Building2, User, X,
+  Building2, User, X, Truck, FlaskConical, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signOut } from "@/lib/auth-client";
 
 const BOTTOM_TABS = [
   { label: "Home",         href: "/admin",              icon: LayoutDashboard },
@@ -31,12 +33,20 @@ const MORE_ITEMS = [
   { label: "Rx Templates", href: "/admin/prescription-templates",  icon: FileSignature },
   { label: "Referrers",    href: "/admin/referrers",               icon: GitFork },
   { label: "Departments",  href: "/admin/departments",             icon: Building2 },
+  { label: "Suppliers",    href: "/admin/suppliers",               icon: Truck },
+  { label: "Lab Orders",   href: "/admin/lab-orders",              icon: FlaskConical },
   { label: "Profile",      href: "/admin/profile",                 icon: User },
 ];
 
 export function AdminBottomNav() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const router = useRouter();
+
+  async function handleLogout() {
+    await signOut();
+    router.push("/sign-in");
+  }
 
   const isMoreActive =
     !BOTTOM_TABS.some(
@@ -128,7 +138,7 @@ export function AdminBottomNav() {
             </div>
 
             {/* Grid of all other nav items */}
-            <div className="grid grid-cols-4 gap-2 px-4 pb-6">
+            <div className="grid grid-cols-4 gap-2 px-4 pb-3">
               {MORE_ITEMS.map(({ label, href, icon: Icon }) => {
                 const active =
                   pathname === href ||
@@ -152,6 +162,17 @@ export function AdminBottomNav() {
                   </Link>
                 );
               })}
+            </div>
+
+            {/* Logout */}
+            <div className="px-4 pb-6">
+              <button
+                onClick={handleLogout}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive transition-all active:scale-95 hover:bg-destructive/20"
+              >
+                <LogOut className="size-4" />
+                Logout
+              </button>
             </div>
           </div>
         </div>

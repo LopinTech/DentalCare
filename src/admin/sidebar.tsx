@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Calendar, Users, UserCog, Stethoscope, Settings,
   CreditCard, ClipboardList, Package, BarChart3, FileQuestion,
   Tag, FileSignature, GitFork, Droplets, X, Stethoscope as Logo,
-  ListOrdered, Building2,
+  ListOrdered, Building2, Truck, FlaskConical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +30,8 @@ const NAV_ITEMS = [
     { label: "Rx Templates", href: "/admin/prescription-templates", icon: FileSignature },
     { label: "Referrers", href: "/admin/referrers", icon: GitFork },
     { label: "Departments", href: "/admin/departments", icon: Building2 },
+    { label: "Suppliers", href: "/admin/suppliers", icon: Truck },
+    { label: "Lab Orders", href: "/admin/lab-orders", icon: FlaskConical },
   ]},
 ];
 

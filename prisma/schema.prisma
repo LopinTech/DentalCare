@@ -14,6 +14,25 @@ enum UserRole {
   admin
   doctor
   receptionist
+  employee
+  lab
+  supplier
+}
+
+enum SupplierOrderStatus {
+  pending
+  confirmed
+  shipped
+  delivered
+  cancelled
+}
+
+enum LabOrderStatus {
+  pending
+  sent
+  in_progress
+  completed
+  cancelled
 }
 
 enum ServiceType {
@@ -131,6 +150,7 @@ model User {
   accounts            Account[]
   doctor              Doctor?
   patient             Patient?
+  supplier            Supplier?
   createdAppointments Appointment[] @relation("AppointmentCreatedBy")
 }
 
@@ -397,6 +417,8 @@ model Patient {
   medicalNotes             String?
   emergencyContactName     String?
   emergencyContactPhone    String?
+  agreementAccepted        Boolean        @default(false)
+  agreementPartner         String?
   createdAt                DateTime       @default(now())
   updatedAt                DateTime       @updatedAt
 
@@ -410,6 +432,9 @@ model Patient {
   consentForms      ConsentForm[]
   photos            PatientPhoto[]
   queueTokens       QueueToken[]
+  familyMembers        FamilyMember[]
+  linkedFamilyMembers  FamilyMember[] @relation("LinkedPatient")
+  labOrders            LabOrder[]
 }
 
 // ─── Appointments ──────────────────────────────────────────────────────────────
@@ -537,6 +562,7 @@ model TreatmentSession {
   invoices     Invoice[]
   consentForms ConsentForm[]
   photos       PatientPhoto[]
+  labOrders    LabOrder[]
 }
 
 // ─── Billing & Invoicing ───────────────────────────────────────────────────────
@@ -752,4 +778,110 @@ model QueueToken {
   @@index([patientId])
   @@index([departmentId])
   @@index([status])
+}
+
+// ─── Supplier ──────────────────────────────────────────────────────────────────
+
+model SupplierCategory {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  isActive    Boolean    @default(true)
+  sortOrder   Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  suppliers Supplier[]
+}
+
+model Supplier {
+  id         Int               @id @default(autoincrement())
+  userId     String?           @unique
+  user       User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  categoryId Int?
+  category   SupplierCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  name       String
+  phone      String?
+  email      String?
+  address    String?
+  notes      String?
+  isActive   Boolean           @default(true)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  orders SupplierOrder[]
+
+  @@index([categoryId])
+}
+
+model SupplierOrder {
+  id          Int                 @id @default(autoincrement())
+  supplierId  Int
+  supplier    Supplier            @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  status      SupplierOrderStatus @default(pending)
+  orderDate   DateTime            @default(now())
+  totalAmount Decimal?            @db.Decimal(10, 2)
+  notes       String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  items SupplierOrderItem[]
+
+  @@index([supplierId])
+  @@index([status])
+}
+
+model SupplierOrderItem {
+  id        Int           @id @default(autoincrement())
+  orderId   Int
+  order     SupplierOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  itemName  String
+  quantity  Int           @default(1)
+  unitPrice Decimal?      @db.Decimal(10, 2)
+  total     Decimal?      @db.Decimal(10, 2)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([orderId])
+}
+
+// ─── Lab Orders ────────────────────────────────────────────────────────────────
+
+model LabOrder {
+  id                 Int              @id @default(autoincrement())
+  patientId          Int
+  patient            Patient          @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  treatmentSessionId Int?
+  treatmentSession   TreatmentSession? @relation(fields: [treatmentSessionId], references: [id], onDelete: SetNull)
+  labType            String
+  description        String?
+  status             LabOrderStatus   @default(pending)
+  sentAt             DateTime?
+  completedAt        DateTime?
+  notes              String?
+  result             String?
+  resultDocuments    Json?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([patientId])
+  @@index([status])
+}
+
+// ─── Family Members ────────────────────────────────────────────────────────────
+
+model FamilyMember {
+  id              Int      @id @default(autoincrement())
+  patientId       Int
+  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  name            String
+  relation        String
+  phone           String?
+  linkedPatientId Int?
+  linkedPatient   Patient? @relation("LinkedPatient", fields: [linkedPatientId], references: [id], onDelete: SetNull)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([linkedPatientId])
 }
