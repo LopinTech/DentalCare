@@ -22,8 +22,8 @@
   --muted-foreground: oklch(0.5 0 0);
   --border: oklch(0.91 0 0);
   --input: oklch(0.93 0 0);
-  --ring: oklch(0.62 0.22 270 / 0.35);
-  --primary: #16a34a;
+  --ring: oklch(0.38 0.13 157 / 0.4);
+  --primary: #006536;
   --primary-foreground: oklch(0.98 0 0);
   --destructive: oklch(0.94 0.05 25);
   --destructive-foreground: oklch(0.5 0.26 25);
