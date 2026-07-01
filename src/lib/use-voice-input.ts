@@ -1,14 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function useVoiceInput() {
   const [listening, setListening] = useState(false);
+  const [supported, setSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
-  const supported =
-    typeof window !== "undefined" &&
-    ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
+  useEffect(() => {
+    setSupported(
+      "SpeechRecognition" in window || "webkitSpeechRecognition" in window,
+    );
+  }, []);
 
   function start(onResult: (text: string) => void) {
     if (!supported) return;
